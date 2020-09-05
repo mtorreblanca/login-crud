@@ -1,5 +1,5 @@
-import firebase from 'firebase'
-import firestore from 'firebase/firestore'
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -11,7 +11,15 @@ const firebaseConfig = {
   messagingSenderId: "221502480995",
   appId: "1:221502480995:web:6ed43ade44db7e2c380e56"
 };
+  // FORMA 1
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore()
-export const coleccion = db.collection('frutas')
+// firebase.initializeApp(firebaseConfig);
+// const db = firebase.firestore()
+// export const coleccion = db.collection('frutas')
+
+// FORMA 2
+let firebaseApp = firebase.initializeApp(firebaseConfig);
+let db = firebase.firestore();
+//let coleccion = db.collection('frutas')
+
+export { db, firebase};
