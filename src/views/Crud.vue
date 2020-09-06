@@ -3,16 +3,16 @@
     <form @submit.prevent="agregarFruta">
       <label>Fruta</label>
       <br />
-      <input v-model="nombre" type="text" placeholder="nombre de fruta" />
+      <input v-model="formData.nombre" type="text" placeholder="nombre de fruta" />
       <br />
       <br />
 
       <label>Cantidad</label>
       <br />
-      <input v-model="cantidad" type="number" placeholder="cantidad de fruta" />
+      <input v-model="formData.cantidad" type="number" placeholder="cantidad de fruta" />
       <br />
       <br />
-      <button>AGREGAR</button>
+      <button type="submit">AGREGAR</button>
     </form>
 
     <br />
@@ -21,7 +21,7 @@
       <tr>Nombre | Cantidad</tr>
       <tr v-for="item in frutas" v-bind:key="item.id">
         <th>
-          Fruta: {{item.data.nombre}} | Cantidad: {{item.data.cantidad }}
+          Fruta: {{item.nombre}} | Cantidad: {{item.cantidad }}
           <button
             @click="editarFruta(item.id)"
           >Editar</button>
@@ -46,51 +46,55 @@ const collection = 'fruits'
 export default {
   data () {
     return {
-      nombre: null,
-      cantidad: null,
-      id: null,
-      index: null,
-      frutas: [
-
-      ],
+      formData: {
+        nombre: null,
+        cantidad: null
+      },
+      frutas: [],
       error: ''
     }
   },
   firestore () {
     return {
-      firebaseData: db.doc(collection)
+      frutas: db.collection(collection)
     }
   },
-  mounted () {
-    this.frutas = []
-    collection
-      .get()
-      .then((r) =>
-        r.docs.map((item) => {
-          this.frutas.push({ id: item.id, data: item.data() })
-        })
-      )
-  },
+  // mounted () {
+  //   this.frutas = []
+  //   collection
+  //     .get()
+  //     .then((r) =>
+  //       r.docs.map((item) => {
+  //         this.frutas.push({ id: item.id, data: item.data() })
+  //       })
+  //     )
+  // },
 
   methods: {
-    agregarFruta () {
-      collection
-        .add({ nombre: this.nombre, cantidad: this.cantidad })
-        .then(() => this.$mount())
+    async agregarFruta () {
+      const { nombre, cantidad } = this.formData
+      db.collection(collection)
+        .add({ nombre, cantidad })
+      this.formData.nombre = ''
+      this.formData.cantidad = ''
     },
-
-    editarFruta (id) {
-      collection
-        .doc(id)
-        .set({ nombre: this.nombre, cantidad: this.cantidad })
-        .then(() => this.$mount())
+    async editarFruta (id) {
+      try {
+        await db.collection(collection)
+          .doc(id)
+          .set({ nombre: this.formData.nombre, cantidad: this.formData.cantidad })
+      } catch (error) {
+        alert(error)
+      }
     },
-
     eliminarFruta (id) {
-      collection
-        .doc(id)
-        .delete()
-        .then(() => this.$mount())
+      try {
+        db.collection(collection)
+          .doc(id)
+          .delete()
+      } catch (error) {
+        alert(error)
+      }
     }
   }
 }

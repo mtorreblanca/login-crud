@@ -1,23 +1,39 @@
 <template>
   <div>
-    <template>
+    <div id="nav">
       <router-link to="/crud">IR A CRUD</router-link>|
       <a id="poin" @click="cerrarSesion">Cerrar Sesión</a>
-    </template>
-    <br />
-    <br />
-
-    <template>
-      <router-link to="/registro">REGISTRARME</router-link>
-|
+      <br>
+      <router-link to="/registro">REGISTRARME</router-link>|
       <router-link to="/login">INICIAR SESIÓN</router-link>
-    </template>
+    </div>
   </div>
 </template>
 
-<style>
+<style lang="scss">
 #poin {
   cursor: pointer;
+}
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+#nav {
+  padding: 30px;
+
+  a {
+    font-weight: bold;
+    color: #2c3e50;
+
+    &.router-link-exact-active {
+      color: #42b983;
+    }
+  }
 }
 </style>
 
