@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>Login</h1>
     <form @submit.prevent="iniciarSesion">
       <label>Correo</label>
       <br />
@@ -11,14 +12,14 @@
       <input v-model="pass" type="password" placeholder="inserta contraseña" />
       <br />
       <br />
-      <button>INICIAR SESION</button>
+      <button type="submit">INICIAR SESION</button>
     </form>
   </div>
 </template>
 
 <script>
-import firebase from 'firebase'
-
+import { auth } from '../firebase/init'
+const { log } = console
 export default {
   data () {
     return {
@@ -29,18 +30,17 @@ export default {
   },
 
   methods: {
-    iniciarSesion () {
+    async iniciarSesion () {
       this.error = ''
       if (this.correo && this.pass) {
-        firebase
-          .auth()
-          .signInWithEmailAndPassword(this.correo, this.pass)
-          .then((u) => {
-            this.$router.push({ name: 'crud' })
-          })
-          .catch((err) => {
-            this.error = err.message
-          })
+        try {
+          await auth
+            .signInWithEmailAndPassword(this.correo, this.pass)
+          this.$router.push({ name: 'crud' })
+        } catch (error) {
+          log(error)
+          this.error = error.message
+        }
       } else {
         this.error = 'todos los campos son requeridos'
       }
